@@ -2,6 +2,7 @@
 
 import time
 import random
+import pins
 
 
 class BushEyes:
@@ -9,30 +10,6 @@ class BushEyes:
 
     def __init__(self, pin):
         self.pin = pin
-
-
-class PinManager:
-    def unexport_pin(self, pin):
-        f = open('/sys/class/gpio/unexport', 'w')
-        f.write(str(pin))
-        f.close()
-
-    def export_pin(self, pin):
-        f = open('/sys/class/gpio/export', 'w')
-        f.write(str(pin))
-        f.close()
-
-    def define_direction(self, pin, direction):
-        path = '/sys/class/gpio/gpio' + str(pin) + '/direction'
-        f = open(path, 'w')
-        f.write(str(direction))
-        f.close()
-
-    def set_pin_value(self, pin, value):
-        path = '/sys/class/gpio/gpio' + str(pin) + '/value'
-        f = open(path, 'w')
-        f.write(str(value))
-        f.close()
 
 
 # Use the following GPIOs for LEDs
@@ -53,7 +30,7 @@ eyesList = [BushEyes(2),
             BushEyes(27)]
 
 # Create a pin manager to help us write pin values and directions
-pinMgr = PinManager()
+pinMgr = pins.PinManager()
 
 for eyes in eyesList:
     pinMgr.unexport_pin(eyes.pin)
