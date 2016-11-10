@@ -2,8 +2,7 @@
 
 import time
 import random
-import pins
-
+import RPi.GPIO as GPIO
 
 class BushEyes:
     pin = 0
@@ -11,6 +10,8 @@ class BushEyes:
     def __init__(self, pin):
         self.pin = pin
 
+
+ 
 
 # Use the following GPIOs for LEDs
 eyesList = [BushEyes(2),
@@ -29,13 +30,9 @@ eyesList = [BushEyes(2),
             BushEyes(18),
             BushEyes(27)]
 
-# Create a pin manager to help us write pin values and directions
-pinMgr = pins.PinManager()
-
+GPIO.setmode(GPIO.BCM)
 for eyes in eyesList:
-    pinMgr.unexport_pin(eyes.pin)
-    pinMgr.export_pin(eyes.pin)
-    pinMgr.define_direction(eyes.pin, 'out')
+    GPIO.setup(eyes.pin,GPIO.OUT)
 
 random = random.Random()
 
@@ -54,12 +51,10 @@ while 1:
     eyesToBlink = getEyesToBlink()
 
     for selectedEye in eyesToBlink:
-        pinMgr.set_pin_value(selectedEye.pin, 1)
+        GPIO.output(selectedEye.pin, 1)
     time.sleep(1)
 
     for selectedEye in eyesToBlink:
-        pinMgr.set_pin_value(selectedEye.pin, 0)
+        GPIO.output(selectedEye.pin, 0)
     time.sleep(0.5)
 
-for eyes in eyesList:
-    pinMgr.unexport_pin(eyes.pin)
